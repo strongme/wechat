@@ -1,0 +1,9 @@
+{
+  "name": "music",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "git://github.com/jquery/jquery.git#~2.1.1",
+    "materialize": "~0.95.1"
+  },
+  "devDependencies": {}
+}
