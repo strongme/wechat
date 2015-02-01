@@ -13,7 +13,6 @@
 	</context:component-scan>
 	<context:annotation-config/>
 	<mvc:annotation-driven/>
-	
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="messageConverters">
