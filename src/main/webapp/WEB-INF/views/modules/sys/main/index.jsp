@@ -15,6 +15,7 @@
  		<div class="collection">
         <a href="#!" class="collection-item">上传项目到 Github</a>
         <a href="#!" class="collection-item">修改项目依赖</a>
+        <a href="#!" class="collection-item">添加微信开发接口sdk（maven依赖来自github部署）</a>
       </div>
  	</div>
  </div>

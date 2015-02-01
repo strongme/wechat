@@ -29,9 +29,19 @@
 	</properties>
 
 
+	<repositories>
+		<repository>
+			<id>wechat-sm-sdk-mvn-repo</id>
+			<url>https://raw.github.com/strongme/wechat-sm-sdk/mvn-repo/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>com.github.usc</groupId>
+			<artifactId>wechat-mp-sdk</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- WEB begin -->
 		<dependency>
 			<groupId>taglibs</groupId>
