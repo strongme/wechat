@@ -6,6 +6,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.bean.WxMenu;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.util.StringUtils;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("wc")
@@ -109,6 +113,32 @@ public class WechatController {
 			return;
 		}
 	}
-
+	
+	@RequestMapping(value="/menu_get",produces="application/json")
+	public @ResponseBody WxMenu getMenu() throws WxErrorException {
+		//先删除现有菜单
+		wxMpService.menuDelete();
+		WxMenu menu = new WxMenu();
+		WxMenu.WxMenuButton button1 = new WxMenu.WxMenuButton();
+		button1.setName("发送位置");
+		button1.setKey("SEND_LOCATION");
+		button1.setType(WxConsts.LOCATION_SELECT);
+		menu.getButtons().add(button1);
+		WxMenu.WxMenuButton button2 = new WxMenu.WxMenuButton();
+		button2.setName("扫码");
+		button2.setKey("SCAN__GET_INFO");
+		button2.setType(WxConsts.EVT_SCANCODE_WAITMSG);
+		menu.getButtons().add(button2);
+		
+		WxMenu.WxMenuButton button3 = new WxMenu.WxMenuButton();
+		button3.setKey("TAKE_PIC");
+		button3.setName("照片");
+		button3.setType(WxConsts.PIC_PHOTO_OR_ALBUM);
+		menu.getButtons().add(button3);
+		wxMpService.menuCreate(menu);
+		return wxMpService.menuGet();
+	}
+	
+	
 
 }

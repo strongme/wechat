@@ -10,7 +10,10 @@ import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutNewsMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutNewsMessage.Item;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
 public class CustomWxMpMsgRouter extends WxMpMessageRouter {
 
@@ -24,11 +27,14 @@ public class CustomWxMpMsgRouter extends WxMpMessageRouter {
 			public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
 					Map<String, Object> context, WxMpService wxMpService,
 					WxSessionManager sessionManager) throws WxErrorException {
-				String result = "欢迎关注Strongbuy "+wxMessage.getMsgType();;
-				WxMpXmlOutTextMessage m = WxMpXmlOutMessage.TEXT()
-						.content(result).fromUser(wxMessage.getToUserName())
-						.toUser(wxMessage.getFromUserName()).build();
-				return m;
+				WxMpUser user = wxMpService.userInfo(wxMessage.getFromUserName(),"zh_CN");
+				Item item1 = new Item();item1.setTitle(user.getNickname());
+				String tmp = "欢迎您，来自"+user.getCountry()+"-"+user.getProvince()+"-"+user.getCity()+"的"+user.getNickname()+"您发送的是"+wxMessage.getMsgType()+"类型的消息"+(wxMessage.getEventKey()!=null?("\r\n事件Key:"+wxMessage.getEventKey()):"");
+				item1.setDescription(tmp);
+				item1.setPicUrl(user.getHeadImgUrl());
+				item1.setUrl("http://strongme.cn");
+				WxMpXmlOutNewsMessage m2 = WxMpXmlOutMessage.NEWS().addArticle(item1).fromUser(wxMessage.getToUserName()).toUser(wxMessage.getFromUserName()).build();
+				return m2;
 			}
 		};
 		
