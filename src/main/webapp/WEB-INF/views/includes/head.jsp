@@ -4,4 +4,4 @@
 <link rel="stylesheet" type="text/css" href="${ctxStatic}/materialize/dist/css/materialize.min.css" />
 <script type="text/javascript" src="${ctxStatic}/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="${ctxStatic}/materialize/dist/js/materialize.js"></script>
-<script type="text/javascript" src="http://cdn.bootcss.com/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/jquery.qrcode.min.js"></script>
