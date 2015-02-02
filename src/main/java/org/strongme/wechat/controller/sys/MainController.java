@@ -24,10 +24,7 @@ public class MainController {
 	
 	@RequestMapping(value="")
 	public String index(Model model,HttpServletRequest request) {
-		String host = "4667ac7.ngrok.com";
-		int port = request.getServerPort();
-		String protocol = request.getScheme();
-		String redirect = protocol+"://"+host+request.getContextPath()+"/code_for_token";
+		String redirect ="http://wechat-strongme.herokuapp.com/code_for_token";
 		redirect = URLEncoder.encode(redirect);
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4a3f2ef9e102df10&redirect_uri="+redirect+"&response_type=code&scope=snsapi_userinfo#wechat_redirect"; 
 		model.addAttribute("url", url);
