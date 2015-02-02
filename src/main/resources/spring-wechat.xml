@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<context:property-placeholder location="classpath*:/wechat.properties"/>
+	
+	<bean id="wxConfig" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
+		<property name="appId" value="${APP_ID}"></property>
+		<property name="secret" value="${APP_SECRET}"></property>
+		<property name="token" value="${TOKEN}"></property>
+		<property name="aesKey" value="${APP_SECRET}"></property>
+	</bean>
+	
+	<bean id="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">
+		<property name="wxMpConfigStorage" ref="wxConfig"></property>
+	</bean>
+	
+	<bean id="customRouter" class="org.strongme.wechat.config.CustomWxMpMsgRouter">
+		<constructor-arg name="mpService" ref="wxMpService"></constructor-arg>
+	</bean>
+	
+</beans>

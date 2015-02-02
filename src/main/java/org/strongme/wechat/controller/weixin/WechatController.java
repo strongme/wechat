@@ -1,31 +1,24 @@
 package org.strongme.wechat.controller.weixin;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import me.chanjar.weixin.common.util.StringUtils;
+import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.strongme.wechat.util.weixin.WebUtil;
-import org.usc.wechat.mp.sdk.factory.PushEnumFactory;
-import org.usc.wechat.mp.sdk.util.XmlUtil;
-import org.usc.wechat.mp.sdk.vo.Signature;
-import org.usc.wechat.mp.sdk.vo.message.reply.Reply;
-import org.usc.wechat.mp.sdk.vo.push.Push;
-
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
 
 @Controller
 @RequestMapping("wc")
@@ -34,86 +27,88 @@ public class WechatController {
 	private static final Logger log = LoggerFactory
 			.getLogger(WechatController.class);
 
-	private static final String TOKEN = "strongme";
+	@Resource
+	private WxMpInMemoryConfigStorage wxConfig;
+	@Resource
+	private WxMpService wxMpService;
+	@Autowired
+	private WxMpMessageRouter customRouter;
 
-	@RequestMapping(value = "/validate", method = RequestMethod.GET, produces = "text/plain")
+	@RequestMapping(value = "/validate", method = RequestMethod.GET, produces = "text/html;charset=utf-8")
 	public void validate(HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-			Signature signature = new Signature();
-			boolean hasRights = checkSignature(signature, request);
-			if (hasRights) {
-				log.info("signature-success:{}", signature);
-				WebUtil.outputString(response, signature.getEchostr());
-			} else {
-				log.info("signature-not-match:{}", signature);
-			}
-		} catch (Exception e) {
-			log.error("signature-error", e);
-		}
-	}
+			HttpServletResponse response) throws IOException {
+		String signature = request.getParameter("signature");
+		String nonce = request.getParameter("nonce");
+		String timestamp = request.getParameter("timestamp");
 
-	@RequestMapping(value = "/validate", method = RequestMethod.POST, produces = "text/plain")
-	public void validate_msg(HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-			Signature signature = new Signature();
-			if (!checkSignature(signature, request)) {
-				log.info("signature-not-match:{}", signature);
+		if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+			// 消息签名不正确，说明不是公众平台发过来的消息
+			response.getWriter().println("非法请求");
+			return;
+		} else {
+			String echostr = request.getParameter("echostr");
+			if (StringUtils.isNotBlank(echostr)) {
+				// 说明是一个仅仅用来验证的请求，回显echostr
+				response.getWriter().println(echostr);
 				return;
 			}
-			String sessionid = request.getSession().getId();
-			String message = WebUtil.getPostString(request.getInputStream());
-			log.info("push-xml:{},{}", sessionid, message);
+		}
 
-			String messageType = getMsgType(message);
-			PushEnumFactory pushEnum = EnumUtils.getEnum(PushEnumFactory.class,
-					StringUtils.upperCase(messageType));
-			Validate.notNull(pushEnum, "don't-support-%s-type-message",
-					messageType);
+	}
 
-			Push push = pushEnum.convert(message);
-			log.info("push-obj:{},{}", sessionid, push);
+	@RequestMapping(value = "/validate", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	public void validate_msg(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		String signature = request.getParameter("signature");
+		String nonce = request.getParameter("nonce");
+		String timestamp = request.getParameter("timestamp");
 
-			Reply reply = pushEnum.parse(push);
-			String replyXml = XmlUtil.marshal(reply);
+		response.setContentType("text/html;charset=utf-8");
+		response.setStatus(HttpServletResponse.SC_OK);
 
-			if (StringUtils.isNotEmpty(replyXml)) {
-				log.info("reply-xml:{},{}", sessionid, replyXml);
-				log.info("reply-obj:{},{}", sessionid, reply);
-				WebUtil.outputString(response, replyXml);
-			} else {
-				log.info("no-reply:{},{}", sessionid, reply);
+		if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+			// 消息签名不正确，说明不是公众平台发过来的消息
+			response.getWriter().println("非法请求");
+			return;
+		}
+
+		String echostr = request.getParameter("echostr");
+		if (StringUtils.isNotBlank(echostr)) {
+			// 说明是一个仅仅用来验证的请求，回显echostr
+			response.getWriter().println(echostr);
+			return;
+		}
+
+		String encryptType = StringUtils.isBlank(request
+				.getParameter("encrypt_type")) ? "raw" : request
+				.getParameter("encrypt_type");
+
+		WxMpXmlMessage inMessage = null;
+		
+		if ("raw".equals(encryptType)) {
+			// 明文传输的消息
+			inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
+		} else if ("aes".equals(encryptType)) {
+			// 是aes加密的消息
+			String msgSignature = request.getParameter("msg_signature");
+			inMessage = WxMpXmlMessage.fromEncryptedXml(
+					request.getInputStream(), wxConfig, timestamp, nonce,
+					msgSignature);
+		} else {
+			response.getWriter().println("不可识别的加密类型");
+			return;
+		}
+		WxMpXmlOutMessage outMessage = customRouter.route(inMessage);
+
+		if (outMessage != null) {
+			if ("raw".equals(encryptType)) {
+				response.getWriter().write(outMessage.toXml());
+			} else if ("aes".equals(encryptType)) {
+				response.getWriter().write(outMessage.toEncryptedXml(wxConfig));
 			}
-		} catch (Exception e) {
-			log.error("push-reply-error", e);
+			return;
 		}
 	}
 
-	private boolean checkSignature(Signature signature,
-			HttpServletRequest request) throws IllegalAccessException,
-			InvocationTargetException {
-		BeanUtils.populate(signature, request.getParameterMap());
-		signature.setToken(TOKEN);
-		String sign = Hashing.sha1()
-				.hashString(buildSignatureText(signature), Charsets.UTF_8)
-				.toString();
-		return sign.equalsIgnoreCase(signature.getSignature());
-	}
-
-	private String buildSignatureText(Signature signature) {
-		List<String> list = new ArrayList<String>();
-		list.add(Validate.notNull(signature.getToken(), "missing-token"));
-		list.add(Validate.notNull(signature.getTimestamp(), "missing-timestamp"));
-		list.add(Validate.notNull(signature.getNonce(), "missing-nonce"));
-		Collections.sort(list);
-
-		return StringUtils.join(list, "");
-	}
-
-	private String getMsgType(String message) {
-		return StringUtils.substringBetween(message, "<MsgType><![CDATA[",
-				"]]></MsgType>");
-	}
 
 }
