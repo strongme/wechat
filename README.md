@@ -1,6 +1,10 @@
 # wechat
 >微信接口调用测试应用，并发布到`Heroku`
 
+-------
+![logo](http://strongimg.qiniudn.com/logo_strongme_reg.png)
+-------
+
 commit log:
 * wechat首次提交
 * 修改pom.xml依赖以及index.jsp内容

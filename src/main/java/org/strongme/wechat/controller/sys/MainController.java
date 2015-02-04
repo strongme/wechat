@@ -10,11 +10,9 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
@@ -24,7 +22,7 @@ public class MainController {
 	
 	@RequestMapping(value="")
 	public String index(Model model,HttpServletRequest request) {
-		String redirect ="http://wechat-strongme.herokuapp.com/code_for_token";
+		String redirect ="http://strongwalter.xicp.net/wechat/code_for_token";
 		redirect = URLEncoder.encode(redirect);
 		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4a3f2ef9e102df10&redirect_uri="+redirect+"&response_type=code&scope=snsapi_userinfo#wechat_redirect"; 
 		model.addAttribute("url", url);
@@ -34,7 +32,7 @@ public class MainController {
 	@RequestMapping(value="/code_for_token")
 	public String codeForToken(HttpServletRequest request) throws WxErrorException {
 		String code = request.getParameter("code");
-		if(code!=null) {
+		if(code!=null&&!"".equals(code)) {
 			WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
 			WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
 			request.setAttribute("user", wxMpUser);
