@@ -1,7 +1,7 @@
 # wechat
 >微信接口调用测试应用，并发布到`Heroku`
 
-![logo](http://strongimg.qiniudn.com/logo_合体logo_weixinhoutaism.png)
+![logo](http://strongimg.qiniudn.com/logo_black_logo.png)
 
 commit log:
 * wechat首次提交
