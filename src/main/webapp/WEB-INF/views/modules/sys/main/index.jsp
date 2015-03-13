@@ -17,17 +17,19 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-8 list-group">
+		<div class="col-md-12 list-group">
 			<a href="#!" class="list-group-item">上传项目到 Github</a> <a href="#!"
 				class="list-group-item">修改项目依赖</a> <a href="#!"
 				class="list-group-item">添加微信开发接口sdk</a> <a href="#!"
 				class="list-group-item active">实现基本的消息验证以及消息回复</a>
 		</div>
-		<div class="col-md-4">
+		</div>
+		<div class="row">
+		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-12">
 					<c:if test="${not empty url}">
-						<div id="scan"></div>
+						<div id="scan" class="text-center"></div>
 					</c:if>
 				</div>
 			</div>
@@ -37,9 +39,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
-					<div class="panel-heading">Panel heading</div>
+					<div class="panel-heading">用户信息</div>
 					<div class="panel-body list-group">
-						<a class="list-group-item"><img src="${user.headImgUrl}"></a>
+						<a class="list-group-item"><img src="${user.headImgUrl}" style="width:200px;height: 200px;"></a>
 						<a class="list-group-item">${user.nickname }</a> 
 						<a class="list-group-item">${user.country }</a> 
 						<a class="list-group-item">${user.province }</a> 
@@ -53,8 +55,8 @@
 		$(function() {
 			if($("#scan")) {
 				$("#scan").qrcode({
-				    "width": 145,
-				    "height": 145,
+				    "width": 300,
+				    "height": 300,
 				    "color": "#3a3",
 				    "text": "${url}"
 				});
