@@ -27,12 +27,12 @@
 		<jdk.version>1.6</jdk.version>
 		<druid.version>1.0.1</druid.version>
 	</properties>
-	
+
 	<repositories>
-		 <repository>
-	      <id>ossrh</id>
-	      <url>http://repository.sonatype.org/content/groups/public/</url>
-	    </repository>
+		<repository>
+			<id>ossrh</id>
+			<url>http://repository.sonatype.org/content/groups/public/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -41,7 +41,7 @@
 			<artifactId>weixin-java-mp</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		
+
 		<!-- WEB begin -->
 		<dependency>
 			<groupId>taglibs</groupId>
@@ -332,7 +332,66 @@
 	<build>
 		<finalName>wechat</finalName>
 		<plugins>
+
+			<!-- clean插件 -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
+			<!-- tomcat7deploy -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<url>${serverurl}/manager/text</url>
+					<username>${username}</username>
+					<password>${password}</password>
+					<path>/wechat</path>
+				</configuration>
+				<executions>
+					<!-- <execution>
+						<id>to-deploy</id>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution> -->
+					<!-- <execution>
+						<id>to-undeploy</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>undeploy</goal>
+						</goals>
+					</execution> -->
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<!-- <execution>
+						<id>Run Web in Chrome</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<exec executable="start" vmlauncher="false">
+									<arg line="${serverurl}/wechat"></arg>
+								</exec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution> -->
+				</executions>
+			</plugin>
+
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.3</version>
@@ -354,7 +413,42 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
+
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<!-- 部署到远程服务器 mvn clean install -Dlocation=remote 下面这个serverurl需要根据自己的本地端口修改 -->
+			<id>remote-install</id>
+			<properties>
+				<serverurl>http://do.strongme.cn:8080</serverurl>
+				<username>admin</username>
+				<password>admin</password>
+			</properties>
+			<activation>
+				<property>
+					<name>location</name>
+					<value>remote</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 部署到本地 mvn clean install -Dlocation=local 下面这个serverurl需要根据自己的本地端口修改 -->
+			<id>local-install</id>
+			<properties>
+				<serverurl>http://localhost:8080</serverurl>
+				<username>admin</username>
+				<password>admin</password>
+			</properties>
+			<activation>
+				<property>
+					<name>location</name>
+					<value>local</value>
+				</property>
+			</activation>
+		</profile>
+	</profiles>
+
 </project>
