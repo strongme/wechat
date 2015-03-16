@@ -9,7 +9,11 @@
 <title>Wechat</title>
 </head>
 <body>
-
+		<div class="jumbotron">
+		<h1>
+			Hello Succulents <small>开发记录</small>
+		</h1>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<div class=" list-group">
@@ -21,5 +25,12 @@
 			</div>
 		</div>
 		</div>
+		
+		<script type="text/javascript">
+			$(function() {
+				$('ul .nav li').removeClass('active');
+				$('.home').addClass('active');
+			});
+		</script>
 </body>
 </html>

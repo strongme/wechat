@@ -9,7 +9,7 @@
 */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html {
-  font-family: sans-serif;
+  font-family: sans-serif ,微软雅黑;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
 }

@@ -10,23 +10,18 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">Succulent</a>
+			<a class="navbar-brand" href="${ctx}">Succulent</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-				<li><a href="#">Categories</a></li>
+				<li class="home"><a href="${ctx}">Home <span class="sr-only">(current)</span></a></li>
+				<li class="categories"><a href="${ctx}/categories">Categories</a></li>
 			</ul>
 		</div>
 		<!-- /.navbar-collapse -->
 	</div>
 	<!-- /.container-fluid -->
 </nav>
-<div class="jumbotron">
-	<h1>
-		Hello Succulents
-	</h1>
-</div>

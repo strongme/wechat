@@ -24,6 +24,12 @@ public class MainController {
 		return "modules/sys/main/index";
 	}
 	
+	@RequestMapping(value="categories")
+	public String list(Model model,HttpServletRequest request) {
+		return "modules/sys/main/categories";
+	}
+	
+	
 	@RequestMapping(value="/code_for_token")
 	public String codeForToken(HttpServletRequest request) throws WxErrorException {
 		String code = request.getParameter("code");
