@@ -352,20 +352,20 @@
 					<path>/wechat</path>
 				</configuration>
 				<executions>
-					<!-- <execution>
+					<execution>
 						<id>to-deploy</id>
 						<phase>install</phase>
 						<goals>
 							<goal>deploy</goal>
 						</goals>
-					</execution> -->
-					<!-- <execution>
+					</execution> 
+					<execution>
 						<id>to-undeploy</id>
 						<phase>clean</phase>
 						<goals>
 							<goal>undeploy</goal>
 						</goals>
-					</execution> -->
+					</execution> 
 				</executions>
 			</plugin>
 

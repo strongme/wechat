@@ -1,7 +1,5 @@
 package org.strongme.wechat.controller.sys;
 
-import java.net.URLEncoder;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,16 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MainController {
+	
 
 	@Resource
 	private WxMpService wxMpService;
 	
 	@RequestMapping(value="")
 	public String index(Model model,HttpServletRequest request) {
-		String redirect ="http://strongwalter.xicp.net/wechat/code_for_token";
-		redirect = URLEncoder.encode(redirect);
-		String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4a3f2ef9e102df10&redirect_uri="+redirect+"&response_type=code&scope=snsapi_userinfo#wechat_redirect"; 
-		model.addAttribute("url", url);
 		return "modules/sys/main/index";
 	}
 	

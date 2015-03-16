@@ -12,7 +12,8 @@
 	</head>
 	<body>
 		<div class="container">
+			<%@ include file="/WEB-INF/views/includes/nav.jsp" %>
 			<sitemesh:body/>
 		</div>
-	</body>
+</body>
 </html>
