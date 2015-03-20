@@ -426,7 +426,7 @@
 			<properties>
 				<serverurl>http://do.strongme.cn:8080</serverurl>
 				<username>admin</username>
-				<password>admin</password>
+				<password>ysw20130823yzq</password>
 			</properties>
 			<activation>
 				<property>
@@ -441,7 +441,7 @@
 			<properties>
 				<serverurl>http://localhost:8080</serverurl>
 				<username>admin</username>
-				<password>admin</password>
+				<password>ysw20130823yzq</password>
 			</properties>
 			<activation>
 				<property>
