@@ -26,6 +26,10 @@
 		<dozer.version>5.4.0</dozer.version>
 		<jdk.version>1.6</jdk.version>
 		<druid.version>1.0.1</druid.version>
+		<mybatis.version>3.2.3</mybatis.version>
+		<mybatis-spring.version>1.2.1</mybatis-spring.version>     
+		<ehcache.version>2.6.6</ehcache.version>   
+		<mysql.driver.version>5.1.13</mysql.driver.version>
 	</properties>
 
 	<repositories>
@@ -315,7 +319,48 @@
 			<artifactId>xstream</artifactId>
 			<version>${xstream.version}</version>
 		</dependency>
-
+		
+		
+		 <!-- MyBatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis-spring.version}</version>
+        </dependency>
+		
+ 		<!-- EHCACHE begin -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>net.sf.ehcache</groupId>  
+            <artifactId>ehcache-web</artifactId>  
+            <version>2.0.4</version>
+        </dependency>
+		<!-- EHCACHE end -->
+        
+        <!-- Druid是Java语言中最好的数据库连接池。Druid能够提供强大的监控和扩展功能。 -->
+		<dependency>
+		     <groupId>com.alibaba</groupId>
+		     <artifactId>druid</artifactId>
+		     <version>${druid.version}</version>
+		</dependency>
+		
+		<!-- jdbc driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.driver.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+	
 		<!-- TEST begin -->
 		<dependency>
 			<groupId>junit</groupId>
