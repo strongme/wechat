@@ -460,9 +460,9 @@
 			<!-- 部署到本地 mvn clean install -Dlocation=local 下面这个serverurl需要根据自己的本地端口修改 -->
 			<id>local-install</id>
 			<properties>
-				<serverurl>http://localhost:8080</serverurl>
+				<serverurl>http://localhost</serverurl>
 				<username>admin</username>
-				<password>admin</password>
+				<password>lifeisgreat1q2w3e4r</password>
 			</properties>
 			<activation>
 				<property>
